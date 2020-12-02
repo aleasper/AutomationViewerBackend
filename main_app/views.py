@@ -35,7 +35,7 @@ class TestView(View):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class VKDataView(View):
-    def get(self, request):
+    def post(self, request):
         app_id = request.POST.get('app_id')
         db = VKRemoteMDB(app_id)
         res = db.get_all()
