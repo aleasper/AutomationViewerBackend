@@ -13,6 +13,9 @@ from .models import TestModel
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 
+import json
+
+
 @method_decorator(csrf_exempt, name='dispatch')
 class TestView(View):
     def get(self, request):
@@ -36,7 +39,11 @@ class TestView(View):
 @method_decorator(csrf_exempt, name='dispatch')
 class VKDataView(View):
     def post(self, request):
-        app_id = request.POST.get('app_id')
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        app_id = body['app_id']
+        print(app_id)
         db = VKRemoteMDB(app_id)
         res = db.get_all()
         return JsonResponse({'app_info': res})
+
