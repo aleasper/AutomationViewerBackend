@@ -2,11 +2,11 @@ from pymongo import MongoClient
 
 class VKRemoteMDB:
 
-    def __init__(self, this_app_id):
+    def __init__(self, collection_name):
         cluster = MongoClient(
             "mongodb+srv://admin:admin0000@cluster0.ueseg.mongodb.net/AutomationViewerBackend?retryWrites=true&w=majority")
         db = cluster['AutomationViewer']
-        self.collection = db[str(this_app_id)]  # это коллекция
+        self.collection = db[str(collection_name)]  # это коллекция
 
     def get_all(self):
         return [el for el in self.collection.find({})]
