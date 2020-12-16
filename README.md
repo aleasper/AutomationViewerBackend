@@ -102,7 +102,7 @@ Error response:
 }
 ```
 
-####Error codes:
+#### Error codes:
 0 - Server error<br>
 1 - Query parameter `app_id` is not specified<br>
 4 - Wrong login/password in request<br>
