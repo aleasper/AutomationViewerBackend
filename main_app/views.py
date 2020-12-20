@@ -120,5 +120,66 @@ class Login(View):
         else:
             return JsonResponse({'error': {'msg': 'wrong login/password', 'code': 4}, 'ok': False}, status=400)
 
+@method_decorator(csrf_exempt, name='dispatch')
+class VKDataAnalytics(View):
+    def get(self, request):
+        try:
+            app_id = request.GET.get('app_id', None)
+            login = request.GET.get('login', None)
+            password = request.GET.get('password', None)
+
+            if login is not None and password is not None:
+                db = VKRemoteMDB('Users')
+                user = db.find({'login': login})
+                print(f'\n\n\n{user}')
+                if user != []:
+                    user_filed = user[0]
+                    if user_filed['password'] == password:
+                        if app_id is not None:
+                            db = VKRemoteMDB(app_id)
+                            res = db.get_all()
+
+                            if res != []:
+
+                                sorted_by_likes = sorted(res, key=lambda k: k['info']['likes'], reverse=True)
+                                sorted_by_comments = sorted(res, key=lambda k: k['info']['comments'], reverse=True)
+                                sorted_by_reposts = sorted(res, key=lambda k: k['info']['reposts'], reverse=True)
+
+                                k_likes = 5
+                                k_comments = 10
+                                k_reposts = 100
+
+                                sorted_by_importanse = sorted(res,
+                                                              key=lambda k: k['info']['likes'] * k_likes + k['info'][
+                                                                  'comments'] * k_comments + k['info'][
+                                                                                'reposts'] * k_reposts,
+                                                              reverse=True)
+
+
+                                analytic_data = {
+                                    'mostly_commented': sorted_by_comments[0],
+                                    'mostly_reposted': sorted_by_reposts[0],
+                                    'mostly_liked': sorted_by_likes[0],
+                                    'top': sorted_by_importanse[0: int(len(sorted_by_importanse) * 0.3)]
+                                }
+
+                                return JsonResponse({'analytics': analytic_data, 'ok': True})
+
+                            else:
+                                return JsonResponse({'analytics': [], 'ok': True})
+                        else:
+                            return JsonResponse({'error': {'msg': 'no \'app_id\' parameter', 'code': 1}, 'ok': False}, status=400)
+                    else:
+                        return JsonResponse({'error': {'msg': 'wrong login/password', 'code': 4}, 'ok': False},
+                                            status=400)
+                else:
+                    return JsonResponse({'error': {'msg': 'wrong login/password', 'code': 4}, 'ok': False}, status=400)
+            else:
+                return JsonResponse({'error': {'msg': 'wrong login/password', 'code': 4}, 'ok': False}, status=400)
+
+
+        except Exception as e:
+            return JsonResponse({'error': {'msg': f'{e}', 'code': 0}}, status=400)
+
 
 

@@ -48,6 +48,78 @@ Error response:
 }
 ```
 
+### Access to 'ПАСИПМ' data with analytics
+#### Route: `/vk_data_analytics`<br>
+#### Supported methods:
+GET
+with query parameters:
+<br>`app_id=<application id>`
+<br>`login=<login>`
+<br>`password=<password>`
+
+Example: `https://automation-viewer-backend.herokuapp.com/vk_data_analytics?app_id=app_0&login=login&password=password`
+
+Success response:
+```
+{
+    "analytics": {
+        "mostly_commented": {
+            "_id": -129368275,
+            "info": {
+                "likes": 6,
+                "comments": 4,
+                "reposts": 1,
+                "name": "отчислено"
+            }
+        },
+        "mostly_reposted": {
+            "_id": -76040632,
+            "info": {
+                "likes": 123,
+                "comments": 0,
+                "reposts": 3,
+                "name": "хех"
+            }
+        },
+        "mostly_liked": {
+            "_id": -76040632,
+            "info": {
+                "likes": 123,
+                "comments": 0,
+                "reposts": 3,
+                "name": "хех"
+            }
+        },
+        "top": [
+            {
+                "_id": -76040632,
+                "info": {
+                    "likes": 123,
+                    "comments": 0,
+                    "reposts": 3,
+                    "name": "хех"
+                }
+            },
+            {
+             ... 
+            }
+        ]
+    },
+    "ok": true
+}
+```
+Error response:
+```
+{
+    "error": {
+        "msg": "<error message>",
+        "code": <error code>
+    },
+    "ok": false
+}
+```
+
+
 ### Register user
 #### Route: `/register`<br>
 #### Supported methods:
