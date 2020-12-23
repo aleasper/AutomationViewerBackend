@@ -111,14 +111,6 @@ class VKDataView(View):
         except Exception as e:
             return JsonResponse({'error': {'msg': f'{e}', 'code': 0}}, status=400)
 
-    def post(self, request):
-        body_unicode = request.body.decode('utf-8')
-        body = json.loads(body_unicode)
-        app_id = body['app_id']
-        print(app_id)
-        db = VKRemoteMDB(app_id)
-        res = db.get_all()
-        return JsonResponse({'app_info': res})
 
 
 @method_decorator(csrf_exempt, name='dispatch')
