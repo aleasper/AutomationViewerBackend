@@ -20,6 +20,22 @@ from openpyxl import Workbook
 import base64
 
 def get_base64_by_res(res):
+
+    sorted_by_likes = sorted(res, key=lambda k: k['info']['likes'], reverse=True)
+    sorted_by_comments = sorted(res, key=lambda k: k['info']['comments'], reverse=True)
+    sorted_by_reposts = sorted(res, key=lambda k: k['info']['reposts'], reverse=True)
+
+    k_likes = 5
+    k_comments = 10
+    k_reposts = 100
+
+    sorted_by_importanse = sorted(res,
+                                  key=lambda k: k['info']['likes'] * k_likes + k['info'][
+                                      'comments'] * k_comments + k['info'][
+                                                    'reposts'] * k_reposts,
+                                  reverse=True)
+
+
     wb = Workbook()
     sheet = wb.active
 
@@ -38,6 +54,15 @@ def get_base64_by_res(res):
     sheet['D1'] = 'Репосты'
     for k, public in enumerate(res, start=2):
         sheet[f'D{k}'] = public['info']['reposts']
+
+    sheet['E1'] = 'Больше всего лайков'
+    sheet['E2'] = sorted_by_likes[0]['info']['name']
+
+    sheet['F1'] = 'Больше всего комментариев'
+    sheet['F2'] = sorted_by_comments[0]['info']['name']
+
+    sheet['G1'] = 'Больше всего репостов'
+    sheet['G2'] = sorted_by_reposts[0]['info']['name']
 
     for col in sheet.columns:
         max_length = 0
